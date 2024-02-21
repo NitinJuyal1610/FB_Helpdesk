@@ -1,10 +1,10 @@
 'use client';
 import { useState } from 'react';
 export default function Home() {
-  const [connected, setConnected] = useState(true);
+  const [connected, setConnected] = useState(false);
   return (
     <div className="flex min-h-screen flex-col items-center justify-between p-24  bg-[#1E4D91]">
-      <div className="w-1/3 bg-white rounded-xl p-[4rem] flex flex-col gap-6">
+      <div className="w-[30rem] bg-white rounded-xl p-[4rem] flex flex-col gap-6">
         <p className="text-xl text-black text-center font-semibold">
           Facebook Page Integration
         </p>
@@ -21,7 +21,7 @@ export default function Home() {
               type="submit"
               className=" bg-[#204A96] p-3 rounded-lg text-white w-full self-center mt-2"
             >
-              Reply to Messages
+              <a href="/dashboard">Reply to Messages</a>
             </button>
           </div>
         ) : (
