@@ -13,6 +13,8 @@ const authOptions = {
   },
   providers: [
     Credentials({
+      id: 'username-login', // <- add this line
+      name: 'Login',
       credentials: {
         username: { label: 'name', type: 'text', placeholder: 'jsmith' },
         password: { label: 'password', type: 'password' },
