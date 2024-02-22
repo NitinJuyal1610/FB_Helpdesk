@@ -5,7 +5,7 @@ import User from '@/models/User';
 import { z } from 'zod';
 import ts from 'typescript';
 
-export const authOptions = {
+const authOptions = {
   // Configure one or more authentication providers
   // @ts-ignore
   pages: {
