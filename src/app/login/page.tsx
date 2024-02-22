@@ -19,7 +19,7 @@ function Login() {
       console.log(email, password);
       setIsPending(true);
       event.preventDefault(); // Prevent the default form submission
-      const res = await signIn('credentials', {
+      const res = await signIn('username-login', {
         email,
         password,
         redirect: false,
@@ -31,7 +31,7 @@ function Login() {
         alert('Invalid Credentials');
         return;
       }
-      router.push('/');
+      // router.push('/');
     } catch (error) {
       console.log(error);
     }
