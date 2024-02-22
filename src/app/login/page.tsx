@@ -25,6 +25,7 @@ function Login() {
         redirect: false,
       });
 
+      setIsPending(false);
       console.log(res);
       if (res && res.error) {
         alert('Invalid Credentials');
@@ -34,8 +35,6 @@ function Login() {
     } catch (error) {
       console.log(error);
     }
-
-    setIsPending(false);
   };
 
   return (

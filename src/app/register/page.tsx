@@ -26,7 +26,7 @@ function Register() {
       alert('Password must be at least 6 characters long');
       return;
     }
-    const response = await fetch('http://localhost:3000/api/auth/register', {
+    const response = await fetch('/api/auth/register', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json', // Set content type
@@ -38,6 +38,7 @@ function Register() {
       }),
     });
 
+    setIsPending(false);
     const message = (await response.json()).message;
     if (!response.ok) {
       // Handle errors gracefully
@@ -47,7 +48,7 @@ function Register() {
     }
 
     console.log('User registered successfully!');
-    setIsPending(false);
+
     router.push('/login');
   };
 
