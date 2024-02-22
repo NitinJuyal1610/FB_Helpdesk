@@ -4,6 +4,7 @@ import Script from 'next/script';
 import { useEffect, useState } from 'react';
 import {
   fbLogin,
+  fbLogout,
   getFacebookLoginStatus,
   initFacebookSdk,
 } from '@/lib/facebookSdk';
@@ -38,6 +39,14 @@ export default function Home() {
           <div className="flex flex-col gap-2">
             <button
               type="submit"
+              onClick={async () => {
+                await fbLogout();
+                const response = await getFacebookLoginStatus();
+
+                if (response.status !== 'connected') {
+                  setConnected(false);
+                }
+              }}
               className=" bg-[#DF523F] p-3 rounded-lg text-white w-full self-center mt-2"
             >
               Delete Integration
@@ -55,6 +64,11 @@ export default function Home() {
             <button
               onClick={async () => {
                 await fbLogin();
+                const response = await getFacebookLoginStatus();
+
+                if (response.status === 'connected') {
+                  setConnected(true);
+                }
               }}
               type="submit"
               className=" bg-[#204A96] p-3 rounded-lg text-white w-full self-center mt-2"

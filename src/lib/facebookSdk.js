@@ -1,9 +1,10 @@
-export const initFacebookSdk = () => {
+export const initFacebookSdk = (appId) => {
   return new Promise((resolve, reject) => {
     // Load the Facebook SDK asynchronously
+
     window.fbAsyncInit = () => {
       window.FB.init({
-        appId: '1268250524120464',
+        appId: process.env.NEXT_PUBLIC_FB_APP_ID,
         cookie: true,
         xfbml: true,
         version: 'v16.0',
@@ -24,7 +25,18 @@ export const getFacebookLoginStatus = () => {
 
 export const fbLogin = () => {
   return new Promise((resolve, reject) => {
-    window.FB.login((response) => {
+    window.FB.login(
+      (response) => {
+        resolve(response);
+      },
+      { scope: 'public_profile,email' },
+    );
+  });
+};
+
+export const fbLogout = () => {
+  return new Promise((resolve, reject) => {
+    window.FB.logout((response) => {
       resolve(response);
     });
   });

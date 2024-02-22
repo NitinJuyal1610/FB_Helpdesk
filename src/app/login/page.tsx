@@ -16,8 +16,8 @@ function Login() {
   }
   const handleSubmit = async (event: any) => {
     try {
-      console.log(email, password);
       setIsPending(true);
+
       event.preventDefault(); // Prevent the default form submission
       const res = await signIn('username-login', {
         email,
@@ -26,12 +26,11 @@ function Login() {
       });
 
       setIsPending(false);
-      console.log(res);
+
       if (res && res.error) {
         alert('Invalid Credentials');
         return;
       }
-      // router.push('/');
     } catch (error) {
       console.log(error);
     }

@@ -3,7 +3,7 @@ import Credentials from 'next-auth/providers/credentials';
 import User from '@/models/User';
 
 import { z } from 'zod';
-import ts from 'typescript';
+import connectDB from '@/lib/connectDB';
 
 const authOptions = {
   // Configure one or more authentication providers
@@ -13,7 +13,7 @@ const authOptions = {
   },
   providers: [
     Credentials({
-      id: 'username-login', // <- add this line
+      id: 'username-login',
       name: 'Login',
       credentials: {
         username: { label: 'name', type: 'text', placeholder: 'jsmith' },
@@ -26,7 +26,10 @@ const authOptions = {
 
         if (parsedCredentials.success) {
           const { email, password } = parsedCredentials.data;
+
+          await connectDB();
           const user = await User.findOne({ email });
+
           if (user && (await user.comparePassword(password))) {
             return user;
           }

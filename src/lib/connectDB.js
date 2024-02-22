@@ -4,7 +4,7 @@ const DATABASE_URL = process.env.DATABASE_URL;
 
 if (!DATABASE_URL) {
   throw new Error(
-    'Please define the DATABASE_URL environment variable inside .env.local',
+    'Please define the DATABASE_URL environment variable inside .env',
   );
 }
 
@@ -29,6 +29,7 @@ async function connectDB() {
     });
   }
   cached.conn = await cached.promise;
+  console.timeLog('Connected to MongoDB');
   return cached.conn;
 }
 
