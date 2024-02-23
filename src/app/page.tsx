@@ -7,6 +7,7 @@ import {
   fbLogout,
   getFacebookLoginStatus,
   initFacebookSdk,
+  subscribeToWebhook,
 } from '@/lib/facebookSdk';
 export default function Home() {
   const [connected, setConnected] = useState(false);
@@ -21,6 +22,7 @@ export default function Home() {
       }
     })();
   }, []);
+
   return (
     <div className="flex min-h-screen flex-col items-center justify-between p-24  bg-[#1E4D91]">
       <Script
@@ -65,6 +67,9 @@ export default function Home() {
               onClick={async () => {
                 await fbLogin();
                 const response = await getFacebookLoginStatus();
+
+                //send access token to server for page registration
+                await subscribeToWebhook(response?.authResponse.accessToken);
 
                 if (response.status === 'connected') {
                   setConnected(true);
