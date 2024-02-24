@@ -51,10 +51,8 @@ function Dashboard() {
   }, []);
 
   useEffect(() => {
-    console.log(activeSender, '--');
     const pusher = new Pusher('67ba1292813492d9a757', {
       cluster: 'ap2',
-      useTLS: true,
     });
 
     const channel = pusher.subscribe('webhook');
