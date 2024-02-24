@@ -47,7 +47,7 @@ export const handleMessage = async (
     recipientId,
   });
 
-  pusher.trigger('webhook', 'message', {
+  await pusher.trigger('webhook', 'message', {
     timestamp,
     messageId: message.mid,
     message: message.text,
