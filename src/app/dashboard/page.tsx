@@ -22,34 +22,37 @@ function Dashboard() {
   useEffect(() => {
     (async () => {
       await initFacebookSdk();
-      const res = await getFacebookLoginStatus();
-
-      const conv = await fetch(
-        `/api/conversation?access_token=${res.authResponse.accessToken}`,
-      );
-      const data = await conv.json();
-
-      //profile info
-      const profiles = await Promise.all(
-        data.map(async (conversation: any) => {
-          const val: any = await getUserProfile(
-            conversation.senderId,
-            conversation.pageId,
-            res.authResponse.accessToken,
-          );
-
-          val['message'] =
-            conversation.messages[conversation.messages.length - 1].message;
-
-          return val;
-        }),
-      );
-
-      setConversations(data);
-      setProfiles(profiles);
+      await getConv();
     })();
   }, []);
 
+  const getConv = async () => {
+    const res = await getFacebookLoginStatus();
+
+    const conv = await fetch(
+      `/api/conversation?access_token=${res.authResponse.accessToken}`,
+    );
+    const data = await conv.json();
+
+    //profile info
+    const profiles = await Promise.all(
+      data.map(async (conversation: any) => {
+        const val: any = await getUserProfile(
+          conversation.senderId,
+          conversation.pageId,
+          res.authResponse.accessToken,
+        );
+
+        val['message'] =
+          conversation.messages[conversation.messages.length - 1].message;
+
+        return val;
+      }),
+    );
+
+    setConversations(data);
+    setProfiles(profiles);
+  };
   useEffect(() => {
     const pusher = new Pusher('67ba1292813492d9a757', {
       cluster: 'ap2',
@@ -197,6 +200,7 @@ function Dashboard() {
                   width={500}
                   height={500}
                   className="w-5"
+                  onClick={() => getConv()}
                   alt="Picture of the author"
                 />
               </div>
