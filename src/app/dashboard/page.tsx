@@ -9,6 +9,7 @@ import {
   initFacebookSdk,
 } from '@/lib/facebookSdk';
 import Script from 'next/script';
+import Pusher from 'pusher-js';
 
 import { sendMessage } from '@/lib/facebookSdk';
 
@@ -49,6 +50,31 @@ function Dashboard() {
     })();
   }, []);
 
+  useEffect(() => {
+    console.log(activeSender, '--');
+    const pusher = new Pusher('67ba1292813492d9a757', {
+      cluster: 'ap2',
+      useTLS: true,
+    });
+
+    const channel = pusher.subscribe('webhook');
+
+    channel.bind('message', (data: any) => {
+      // Handle incoming event data
+
+      const newSender = {
+        ...activeSender,
+      };
+
+      newSender['messages'].push(data);
+      setActiveSender({ ...newSender });
+    });
+
+    return () => {
+      channel.unbind_all();
+      channel.unsubscribe();
+    };
+  }, [activeSender]);
   const processConv = (profile: any) => {
     const conversation = conversations.find((conversation: any) => {
       return conversation.senderId === profile.id;
@@ -56,7 +82,8 @@ function Dashboard() {
 
     const activeSender: any = {
       id: profile.id,
-      name: profile.name,
+      first_name: profile.first_name,
+      last_name: profile.last_name,
       profile_pic: profile.profile_pic,
       pageId: conversation.pageId,
     };
@@ -73,11 +100,26 @@ function Dashboard() {
       res.authResponse.accessToken,
       message,
     );
+
+    const msg = {
+      senderId: activeSender.pageId,
+      recipientId: activeSender.id,
+      message,
+      timestamp: Date.now(),
+      messageId: Date.now(),
+    };
+
+    const newSender = {
+      ...activeSender,
+    };
+
+    newSender['messages'].push(msg);
+    setActiveSender({ ...newSender });
     console.log('sent');
   };
 
   return (
-    <div className="flex min-h-screen items-center justify-start bg-white">
+    <div className="flex min-h-screen items-center justify-start bg-white ">
       <Script
         src="https://connect.facebook.net/en_US/sdk.js"
         strategy="lazyOnload"
@@ -177,7 +219,7 @@ function Dashboard() {
             })}
           </div>
         </div>
-        <div className="col-span-6 border-r-2 border-[#E3E3E3]">
+        <div className="col-span-6 border-r-2 border-[#E3E3E3] overflow-scroll">
           <div className="flex flex-col h-full">
             <div className="flex gap-4 p-4 px-5 items-center border-b-2 border-[#E3E3E3] ">
               <div className="text-2xl text-black font-bold">
@@ -187,7 +229,7 @@ function Dashboard() {
               </div>
             </div>
 
-            <div className="bg-[#F6F6F6] grow">
+            <div className="bg-[#F6F6F6] grow ">
               <div className="flex flex-col justify-between h-full">
                 <div>
                   <div className="flex flex-col w-full gap-2 p-4">
@@ -208,6 +250,7 @@ function Dashboard() {
                     onSubmit={(e: any) => {
                       e.preventDefault();
                       if (activeSender) handleMessage(e.target[0].value);
+                      setMessage('');
                     }}
                   >
                     <input

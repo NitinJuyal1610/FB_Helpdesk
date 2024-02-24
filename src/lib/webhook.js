@@ -2,6 +2,15 @@ import axios from 'axios';
 import connectDB from './connectDB';
 import Conversation from '@/models/Conversations';
 
+import Pusher from 'pusher';
+const pusher = new Pusher({
+  appId: '1761410',
+  key: '67ba1292813492d9a757',
+  secret: 'face1cd2d7a384d0d5b8',
+  cluster: 'ap2',
+  useTLS: true,
+});
+
 export const handleMessage = async (
   senderId,
   recipientId,
@@ -38,6 +47,13 @@ export const handleMessage = async (
     recipientId,
   });
 
+  pusher.trigger('webhook', 'message', {
+    timestamp,
+    messageId: message.mid,
+    message: message.text,
+    senderId,
+    recipientId,
+  });
   await conversation.save();
 };
 
